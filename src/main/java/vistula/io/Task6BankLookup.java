@@ -7,47 +7,35 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-/**
- * TASK 6
- * Ask the user for the first three digits of a bank account,
- * download the mapping file and print the abbreviated bank number and bank name.
- */
 public class Task6BankLookup {
-    private static final String SOURCE_URL = "https://ewib.nbp.pl/plewibnra?dokNazwa=plewibnra.txt";
+    private static final String LINK = "https://ewib.nbp.pl/plewibnra?dokNazwa=plewibnra.txt";
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         System.out.print("Enter first three digits of bank account: ");
-        String code = scanner.nextLine().trim();
-
-        if (!code.matches("\\d{3}")) {
+        String code = sc.nextLine().trim();
+        if (code.length() != 3) {
             System.out.println("Please enter exactly three digits.");
             return;
         }
 
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(new URL(SOURCE_URL).openStream(), StandardCharsets.UTF_8))) {
+                new InputStreamReader(new URL(LINK).openStream(), StandardCharsets.UTF_8))) {
             String line;
-            String shortNumber = null;
-            String bankName = null;
-
+            String shortNo = null;
+            String name = null;
             while ((line = br.readLine()) != null) {
-                // Many official text files use ';' as separator. Try to parse; if not, fallback.
-                String[] parts = line.split("[;\t]");
+                if (!line.startsWith(code)) continue;
+                String[] parts = line.split(";");
                 if (parts.length > 0 && parts[0].trim().equals(code)) {
-                    shortNumber = parts.length > 2 ? parts[2].trim() : code;
-                    bankName = parts.length > 3 ? parts[3].trim() : line.replaceFirst("^\\d{3}\\s*", "").trim();
-                    break;
-                } else if (line.startsWith(code)) { // fallback if no separators
-                    shortNumber = code;
-                    bankName = line.substring(code.length()).trim();
+                    if (parts.length > 2) shortNo = parts[2].trim();
+                    if (parts.length > 3) name = parts[3].trim();
                     break;
                 }
             }
-
-            if (bankName != null) {
-                System.out.println("Abbreviated bank number: " + shortNumber);
-                System.out.println("Bank name: " + bankName);
+            if (name != null) {
+                System.out.println("Abbreviated bank number: " + (shortNo != null ? shortNo : code));
+                System.out.println("Bank name: " + name);
             } else {
                 System.out.println("Bank not found for code: " + code);
             }

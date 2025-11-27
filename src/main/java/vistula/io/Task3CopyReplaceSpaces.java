@@ -4,11 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * TASK 3
- * Copy a text file, replacing spaces with dashes, using byte streams.
- * Files are closed automatically via try-with-resources.
- */
 public class Task3CopyReplaceSpaces {
     public static void main(String[] args) {
         String src = args.length > 0 ? args[0] : "test123.txt";

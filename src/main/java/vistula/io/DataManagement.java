@@ -3,32 +3,26 @@ package vistula.io;
 import java.io.*;
 import java.util.Scanner;
 
-/**
- * TASK 5 - DataManagement class
- * Provides three methods: readData(), writeDataToFile(), readDataFromFile().
- * Uses try-with-resources for automatic closing.
- */
 public class DataManagement {
 
     public String readData() {
         System.out.print("Enter first and last name: ");
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+        Scanner sc = new Scanner(System.in);
+        return sc.nextLine();
     }
 
-    public void writeDataToFile(String data, String fileName) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true))) {
-            bw.write(data);
+    public void writeDataToFile(String s, String file) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+            bw.write(s);
             bw.newLine();
         } catch (IOException e) {
             System.out.println("Error writing data: " + e.getMessage());
         }
     }
 
-    public void readDataFromFile(String fileName) {
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+    public void readDataFromFile(String file) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            System.out.println("\nContents of " + fileName + ":");
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
             }
